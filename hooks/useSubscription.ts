@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { server } from '../shared/contracts'
-import * as SorobanClient from 'soroban-client'
+
+import * as SorobanClient from '@stellar/stellar-sdk'
 let xdr = SorobanClient.xdr
 
 /**
@@ -26,7 +27,7 @@ const paging: Record<PagingKey, { lastLedgerStart?: number, pagingToken?: string
 export function useSubscription(
   contractId: string,
   topic: string,
-  onEvent: (event: SorobanClient.SorobanRpc.EventResponse) => void,
+  onEvent: (event: SorobanClient.SorobanRpc.Api.EventResponse) => void,
   pollInterval = 5000
 ) {
   const id = `${contractId}:${topic}`
@@ -62,7 +63,7 @@ export function useSubscription(
      
         paging[id].pagingToken = undefined;
         if (response.latestLedger) {
-          paging[id].lastLedgerStart = parseInt(response.latestLedger);
+          paging[id].lastLedgerStart = parseInt(response.latestLedger.toString());
         }
         response.events && response.events.forEach(event => {
           try {

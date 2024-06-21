@@ -12,7 +12,7 @@ import {
   abundance as abundanceContract,
 } from '../../../shared/contracts'
 
-import * as SorobanClient from 'soroban-client'
+import * as SorobanClient from '@stellar/stellar-sdk'
 import { Deposits, FormPledge } from '../../molecules'
 let xdr = SorobanClient.xdr
 
@@ -58,22 +58,22 @@ const Pledge: FunctionComponent = () => {
 
   const [targetReached, setTargetReached] = useState<boolean>(false)
 
-  useSubscription(
-    crowdfundContract.options.contractId,
-    'pledged_amount_changed',
-    React.useMemo(() => event => {
-      let eventTokenBalance = xdr.ScVal.fromXDR(event.value.xdr, 'base64')
-      setAbundance({ ...abundance!, balance: SorobanClient.scValToNative(eventTokenBalance) })
-    }, [abundance])
-  )
+  // useSubscription(
+  //   crowdfundContract.options.contractId,
+  //   'pledged_amount_changed',
+  //   React.useMemo(() => event => {
+  //     let eventTokenBalance = xdr.ScVal.fromXDR(event.value.xdr, 'base64')
+  //     setAbundance({ ...abundance!, balance: SorobanClient.scValToNative(eventTokenBalance) })
+  //   }, [abundance])
+  // )
 
-  useSubscription(
-    crowdfundContract.options.contractId,
-    'target_reached',
-    React.useMemo(() => () => {
-      setTargetReached(true)
-    }, [])
-  )
+  // useSubscription(
+  //   crowdfundContract.options.contractId,
+  //   'target_reached',
+  //   React.useMemo(() => () => {
+  //     setTargetReached(true)
+  //   }, [])
+  // )
 
   return (
     <Card>
