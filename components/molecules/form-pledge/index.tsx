@@ -5,6 +5,8 @@ import { Utils } from '../../../shared/utils'
 import styles from './style.module.css'
 import { Spacer } from '../../atoms/spacer'
 import { abundance, crowdfund } from '../../../shared/contracts'
+import { signTransaction } from '@stellar/freighter-api'
+import { xdr } from '@stellar/stellar-sdk'
 
 export interface IFormPledgeProps {
   account: string
@@ -24,18 +26,36 @@ export interface IResultSubmit {
 /**
  * Mint 100.0000000 tokens to the user's wallet for testing
  */
-function MintButton({ account, symbol, onComplete, decimals }: { decimals: number, account: string; symbol: string, onComplete: () => void }) {
+function MintButton({
+  account,
+  symbol,
+  onComplete,
+  decimals,
+}: {
+  decimals: number
+  account: string
+  symbol: string
+  onComplete: () => void
+}) {
   const [isSubmitting, setSubmitting] = useState(false)
 
   const displayAmount = 100
   const amount = BigInt(displayAmount * 10 ** decimals)
+
+
 
   return (
     <Button
       title={`Mint ${displayAmount} ${symbol}`}
       onClick={async () => {
         setSubmitting(true)
-        await abundance.mint({ to: account, amount })
+        // await abundance.mint({ to: account, amount })
+        const tx: string = await abundance.mint({ to: account, amount: 100 })
+        let txXDR = xdr.ScVal.scvString(tx).toXDR("base64")
+        // Ensure the transaction is signed
+        await signTransaction(txXDR)
+        // Send the transaction
+        // await txXDR.
         setSubmitting(false)
         onComplete()
       }}
@@ -61,9 +81,9 @@ const FormPledge: FunctionComponent<IFormPledgeProps> = props => {
       abundance.decimals(),
       abundance.symbol(),
     ]).then(fetched => {
-      setBalance(fetched[0])
-      setDecimals(fetched[1])
-      setSymbol(fetched[2].toString())
+      setBalance(fetched[0].result)
+      setDecimals(fetched[1].result)
+      setSymbol(fetched[2].result.toString())
     })
   }, [props.account, props.updatedAt])
 
@@ -77,10 +97,11 @@ const FormPledge: FunctionComponent<IFormPledgeProps> = props => {
     setSubmitting(true)
 
     try {
-      await crowdfund.deposit({
+      const tx = await crowdfund.deposit({
         user: props.account,
         amount: BigInt(amount * 10 ** decimals),
       })
+      await tx.signAndSend()
 
       setResultSubmit({
         status: 'success',
@@ -97,7 +118,7 @@ const FormPledge: FunctionComponent<IFormPledgeProps> = props => {
           error: e?.message || 'An error has occurred',
         })
       } else {
-        throw e;
+        throw e
       }
     } finally {
       setSubmitting(false)
@@ -163,7 +184,9 @@ const FormPledge: FunctionComponent<IFormPledgeProps> = props => {
           />
           <div className={styles.wrapper}>
             <div>
-              <h6>Your balance:  {Utils.formatAmount(balance, decimals)} {symbol}</h6>
+              <h6>
+                Your balance: {Utils.formatAmount(balance, decimals)} {symbol}
+              </h6>
             </div>
           </div>
         </div>

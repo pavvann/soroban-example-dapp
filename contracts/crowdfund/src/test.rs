@@ -2,7 +2,8 @@
 
 use super::testutils::{register_test_contract as register_crowdfund, Crowdfund};
 use soroban_sdk::{
-    testutils::{Address as AddressTestTrait, Events, Ledger}, token, vec, xdr::ScSpecUdtEnumV0, Address, Env, IntoVal, Symbol, Val, Vec
+    testutils::{Address as AddressTestTrait, Events, Ledger},
+    token, vec, Address, Env, IntoVal, Symbol, Val, Vec,
 };
 
 fn create_crowdfund_contract(
@@ -241,10 +242,14 @@ fn sale_successful_non_recipient_still_denied_after_withdrawal() {
 }
 
 #[test]
-#[should_panic]
+#[should_panic(expected = "sale was successful, recipient has withdrawn funds already")]
 fn sale_successful_recipient_withdraws_only_once() {
     let setup = Setup::new();
-    setup.crowdfund.client().deposit(&setup.user2, &5);
+    setup
+        .crowdfund
+        .client()
+        .mock_all_auths()
+        .deposit(&setup.user2, &5);
     advance_ledger(&setup.env, 10);
 
     setup
