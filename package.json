@@ -13,7 +13,8 @@
     "build:contracts": "soroban contract build",
     "bindings:crowdfund": "soroban contract bindings typescript --wasm ./target/wasm32-unknown-unknown/release/soroban_crowdfund_contract.wasm --id $(cat ./.soroban-example-dapp/crowdfund_id) --output-dir ./.soroban-example-dapp/crowdfund-contract --network $(cat ./.soroban-example-dapp/network) --overwrite",
     "bindings:abundance": "soroban contract bindings typescript --wasm ./target/wasm32-unknown-unknown/release/abundance_token.wasm --id $(cat ./.soroban-example-dapp/abundance_token_id) --output-dir ./.soroban-example-dapp/abundance-token --network $(cat ./.soroban-example-dapp/network) --overwrite",
-    "bindings": "npm run bindings:crowdfund && npm run bindings:abundance"
+    "bindings": "npm run bindings:crowdfund && npm run bindings:abundance",
+    "preinstall": "npm run build:contracts && npm run bindings"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "1.1.1",
