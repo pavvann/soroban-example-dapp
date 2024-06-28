@@ -23,7 +23,7 @@ jobs:
     - run: rustup update
     - run: rustup target add wasm32-unknown-unknown
     - run: make build
-    - run: cargo install --locked stellar-cli
+    - run: cargo install_soroban
     - uses: actions/setup-node@v3
       with:
         node-version: 18.17.0
