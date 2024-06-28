@@ -42,20 +42,15 @@ function MintButton({
   const displayAmount = 100
   const amount = BigInt(displayAmount * 10 ** decimals)
 
-
-
   return (
     <Button
       title={`Mint ${displayAmount} ${symbol}`}
       onClick={async () => {
         setSubmitting(true)
-        // await abundance.mint({ to: account, amount })
         const tx = await abundance.mint({ to: account, amount: amount })
-        
         // Ensure the transaction is signed
         await tx.signAndSend()
         // Send the transaction
-        // await txXDR.
         setSubmitting(false)
         onComplete()
       }}
