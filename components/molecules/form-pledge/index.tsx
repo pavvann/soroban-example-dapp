@@ -48,9 +48,7 @@ function MintButton({
       onClick={async () => {
         setSubmitting(true)
         const tx = await abundance.mint({ to: account, amount: amount })
-        // Ensure the transaction is signed
         await tx.signAndSend()
-        // Send the transaction
         setSubmitting(false)
         onComplete()
       }}
