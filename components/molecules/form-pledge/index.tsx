@@ -6,7 +6,7 @@ import styles from './style.module.css'
 import { Spacer } from '../../atoms/spacer'
 import { abundance, crowdfund } from '../../../shared/contracts'
 import { signTransaction } from '@stellar/freighter-api'
-import { xdr } from '@stellar/stellar-sdk'
+import { BASE_FEE, xdr } from '@stellar/stellar-sdk'
 
 export interface IFormPledgeProps {
   account: string
@@ -50,7 +50,8 @@ function MintButton({
       onClick={async () => {
         setSubmitting(true)
         // await abundance.mint({ to: account, amount })
-        const tx: string = await abundance.mint({ to: account, amount: 100 })
+        const tx = await abundance.mint({ to: account, amount: amount } , {fee: Number(BASE_FEE)})
+        
         let txXDR = xdr.ScVal.scvString(tx).toXDR("base64")
         // Ensure the transaction is signed
         await signTransaction(txXDR)
