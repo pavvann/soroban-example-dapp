@@ -50,11 +50,10 @@ function MintButton({
       onClick={async () => {
         setSubmitting(true)
         // await abundance.mint({ to: account, amount })
-        const tx = await abundance.mint({ to: account, amount: amount } , {fee: Number(BASE_FEE)})
+        const tx = await abundance.mint({ to: account, amount: amount })
         
-        let txXDR = xdr.ScVal.scvString(tx).toXDR("base64")
         // Ensure the transaction is signed
-        await signTransaction(txXDR)
+        await tx.signAndSend()
         // Send the transaction
         // await txXDR.
         setSubmitting(false)
