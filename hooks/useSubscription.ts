@@ -66,7 +66,7 @@ export function useSubscription(
         if (response.latestLedger) {
           paging[id].lastLedgerStart = response.latestLedger;
         }
-        response.events && response.events.forEach(event => {
+        response.events && response.events.forEach((event: EventResponse) => {
           try {
             onEvent(event)
           } catch (error) {
