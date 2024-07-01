@@ -7,7 +7,7 @@ NETWORK="$1"
 SOROBAN_RPC_HOST="$2"
 
 if [[ "$SOROBAN_RPC_HOST" == "" ]]; then
-  # If soroban-cli is called inside the soroban-preview docker container,
+  # If stellar-cli is called inside the soroban-preview docker container,
   # it can call the stellar standalone container just using its name "stellar"
   if [[ "$IS_USING_DOCKER" == "true" ]]; then
     SOROBAN_RPC_HOST="http://stellar:8000"
@@ -51,7 +51,7 @@ echo "  RPC URL: $SOROBAN_RPC_URL"
 echo "  Friendbot URL: $FRIENDBOT_URL"
 
 echo Add the $NETWORK network to cli client
-soroban network add \
+stellar network add \
   --rpc-url "$SOROBAN_RPC_URL" \
   --network-passphrase "$SOROBAN_NETWORK_PASSPHRASE" "$NETWORK"
 
@@ -62,11 +62,11 @@ echo $SOROBAN_RPC_URL >./.soroban-example-dapp/rpc-url
 echo "$SOROBAN_NETWORK_PASSPHRASE" >./.soroban-example-dapp/passphrase
 echo "{ \"network\": \"$NETWORK\", \"rpcUrl\": \"$SOROBAN_RPC_URL\", \"networkPassphrase\": \"$SOROBAN_NETWORK_PASSPHRASE\" }" >./shared/config.json
 
-if !(soroban keys ls | grep token-admin 2>&1 >/dev/null); then
-  echo Create the token-admin identity
-  soroban keys generate token-admin --network $NETWORK
+if !(stellar keys ls | grep token-admin 2>&1 >/dev/null); then
+  echo Create the token-admin key
+  stellar keys generate token-admin --network $NETWORK
 fi
-ABUNDANCE_ADMIN_ADDRESS="$(soroban keys address token-admin)"
+ABUNDANCE_ADMIN_ADDRESS="$(stellar keys address token-admin)"
 
 # This will fail if the account already exists, but it'll still be fine.
 echo Fund token-admin account from friendbot
@@ -79,7 +79,7 @@ make build
 
 echo Deploy the abundance token contract
 ABUNDANCE_ID="$(
-  soroban contract deploy $ARGS \
+  stellar contract deploy $ARGS \
     --wasm target/wasm32-unknown-unknown/release/abundance_token.wasm
 )"
 echo "Contract deployed succesfully with ID: $ABUNDANCE_ID"
@@ -87,14 +87,14 @@ echo -n "$ABUNDANCE_ID" >.soroban-example-dapp/abundance_token_id
 
 echo Deploy the crowdfund contract
 CROWDFUND_ID="$(
-  soroban contract deploy $ARGS \
+  stellar contract deploy $ARGS \
     --wasm target/wasm32-unknown-unknown/release/soroban_crowdfund_contract.wasm
 )"
 echo "Contract deployed succesfully with ID: $CROWDFUND_ID"
 echo "$CROWDFUND_ID" >.soroban-example-dapp/crowdfund_id
 
 echo "Initialize the abundance token contract"
-soroban contract invoke \
+stellar contract invoke \
   $ARGS \
   --id "$ABUNDANCE_ID" \
   -- \
@@ -106,7 +106,7 @@ soroban contract invoke \
 
 echo "Initialize the crowdfund contract"
 deadline="$(($(date +"%s") + 86400))"
-soroban contract invoke \
+stellar contract invoke \
   $ARGS \
   --id "$CROWDFUND_ID" \
   -- \

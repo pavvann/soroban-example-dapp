@@ -41,7 +41,7 @@ You have three options: 1. Deploy on [Futurenet](https://soroban.stellar.org/doc
 
        npm run setup
 
-   This runs `./initialize.sh futurenet` behind the scenes, which will create a `token-admin` identity for you (`soroban config identity create token-admin`) and deploy a Fungible Token contract as well as the [crowdfund contract](./contracts/crowdfund), with this account as admin.
+   This runs `./initialize.sh futurenet` behind the scenes, which will create a `token-admin` key for you (`stellar keys create token-admin`) and deploy a Fungible Token contract as well as the [crowdfund contract](./contracts/crowdfund), with this account as admin.
 
 2. Select the Futurenet network in your Freighter browser extension
 
@@ -51,11 +51,11 @@ You have three options: 1. Deploy on [Futurenet](https://soroban.stellar.org/doc
 
    **Note:** This can take up to 5 minutes to start syncing. You can tell it is
    working by visiting http://localhost:8000/, and look at the
-   `ingest_latest_ledger`, field. If it is `0`, the quickstart image is not ready yet. The quickstart container also prints console statements on start status, it will print `soroban rpc: waiting for ready state...` at first and then `soroban rpc: up and ready` when network sync has been reached.
+   `ingest_latest_ledger`, field. If it is `0`, the quickstart image is not ready yet. The quickstart container also prints console statements on start status, it will print `soroban rpc: waiting for ready state...` at first and then `stellar rpc: up and ready` when network sync has been reached.
 
 2. Load the contracts and initialize them
 
-   Use your own local soroban-cli:
+   Use your own local stellar-cli:
 
        ./initialize.sh futurenet http://localhost:8000
 

@@ -18,7 +18,7 @@ type EventResponse = SorobanRpc.Api.GetEventsResponse['events'][number]
 
 /**
  * Subscribe to events for a given topic from a given contract, using a library
- * generated with `soroban contract bindings typescript`.
+ * generated with `stellar contract bindings typescript`.
  *
  * Someday such generated libraries will include functions for subscribing to
  * the events the contract emits, but for now you can copy this hook into your
