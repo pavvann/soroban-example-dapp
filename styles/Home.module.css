@@ -109,3 +109,35 @@
     flex-direction: column;
   }
 }
+
+
+.localeSwitcher {
+  margin-left: auto;
+  margin-right: 2%;
+  display: flex;
+  align-items: center;
+}
+
+.localeSwitcher select {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.localeSwitcher select:hover {
+  border-color: #80bdff;
+}
+
+.localeSwitcher select:focus {
+  border-color: #0056b3;
+}
+
+.localeSwitcher h3 {
+  margin-right: 20px;
+}

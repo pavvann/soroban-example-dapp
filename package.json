@@ -25,8 +25,11 @@
     "bigint-conversion": "^2.4.1",
     "crowdfund-contract": "file:./.soroban-example-dapp/crowdfund-contract",
     "humanize-duration": "^3.27.3",
+    "i18next": "^23.11.5",
     "moment": "^2.29.4",
     "next": "^14.2.4",
+    "next-i18n-router": "^5.5.1",
+    "next-i18next": "^15.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

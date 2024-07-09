@@ -1,6 +1,18 @@
 import React, { ReactNode } from 'react'
 import styles from './style.module.css'
 import Image, { StaticImageData } from 'next/image'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next'
+
+export async function getStaticProps({ locale }: any) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['home'])),
+    },
+  };
+
+}
+
 
 export interface AuthorInfoProps {
   image: StaticImageData
@@ -9,6 +21,7 @@ export interface AuthorInfoProps {
 }
 
 export function AuthorInfo({ image, author, dateTime }: AuthorInfoProps) {
+  const {t} = useTranslation();
   return (
     <div className={styles.content}>
       <Image src={image} width={36} height={36} alt="avatar" />
@@ -16,7 +29,7 @@ export function AuthorInfo({ image, author, dateTime }: AuthorInfoProps) {
         <span>{dateTime}</span>
         <br />
         <span>
-          by <b>{author}</b>
+          {t("home:by")} <b>{author}</b>
         </span>
       </div>
     </div>

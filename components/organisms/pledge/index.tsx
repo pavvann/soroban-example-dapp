@@ -15,6 +15,18 @@ import {
 import { scValToNative } from '@stellar/stellar-sdk'
 import { Deposits, FormPledge } from '../../molecules'
 
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next'
+
+export async function getStaticProps({ locale }: any) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+
+}
+
 const Pledge: FunctionComponent = () => {
   const [updatedAt, setUpdatedAt] = React.useState<number>(Date.now())
   const account = useAccount()
@@ -73,6 +85,7 @@ const Pledge: FunctionComponent = () => {
       setTargetReached(true)
     }, [])
   )
+  const {t} = useTranslation();
 
   return (
     <Card>
@@ -81,28 +94,28 @@ const Pledge: FunctionComponent = () => {
       ) : (
         <>
           {targetReached && (
-            <h6>SUCCESSFUL CAMPAIGN !!</h6>
+            <h6>{t("home:success")}</h6>
           )}
-          <h6>PLEDGED</h6>
+          <h6>{t("home:pledged")}</h6>
           <div className={styles.pledgeAmount}>
             {Utils.formatAmount(abundance.balance, abundance.decimals)} {abundance.symbol}
           </div>
-          <span className={styles.pledgeGoal}>{`of ${Utils.formatAmount(
+          <span className={styles.pledgeGoal}>{t("home:of")}{` ${Utils.formatAmount(
             crowdfund.target,
             abundance.decimals
-          )} ${abundance.symbol} goal`}</span>
+          )} ${abundance.symbol} `}{t("home:goal")}</span>
           <ProgressBar
             value={Utils.percentage(abundance.balance, crowdfund.target, abundance.decimals)}
           />
           <div className={styles.wrapper}>
             <div>
-              <h6>Time remaining</h6>
+              <h6>{t("home:timeremaining")}</h6>
               <span className={styles.values}>
                 {Utils.getRemainingTime(crowdfund.deadline)}
               </span>
             </div>
             <div>
-              <h6>Backers</h6>
+              <h6>{t("home:backers")}</h6>
               <span className={styles.values}>976</span>
             </div>
           </div>
@@ -117,7 +130,7 @@ const Pledge: FunctionComponent = () => {
                 onPledge={() => setUpdatedAt(Date.now())}
               />
             ) : (
-              <ConnectButton label="Connect wallet to pledge" isHigher={true} />
+              <ConnectButton label={t("home:connect_to_pledge")} isHigher={true} />
             ))}
           {account && (
             <Deposits

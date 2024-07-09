@@ -7,6 +7,18 @@ import { Spacer } from '../../atoms/spacer'
 import { abundance, crowdfund } from '../../../shared/contracts'
 import { signTransaction } from '@stellar/freighter-api'
 import { BASE_FEE, xdr } from '@stellar/stellar-sdk'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next'
+
+export async function getStaticProps({ locale }: any) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale)),
+    },
+  };
+
+}
+
 
 export interface IFormPledgeProps {
   account: string
@@ -41,10 +53,10 @@ function MintButton({
 
   const displayAmount = 100
   const amount = BigInt(displayAmount * 10 ** decimals)
-
+  const {t} = useTranslation();
   return (
     <Button
-      title={`Mint ${displayAmount} ${symbol}`}
+      title={`${t("home:mint")} ${displayAmount} ${symbol}`}
       onClick={async () => {
         setSubmitting(true)
         const tx = await abundance.mint({ to: account, amount: amount })
@@ -118,9 +130,12 @@ const FormPledge: FunctionComponent<IFormPledgeProps> = props => {
     }
   }
 
+  const {t} = useTranslation();
+
+
   return (
     <div>
-      <h6>Choose Amount</h6>
+      <h6>{t("home:chooseamt")}</h6>
       <div className={styles.wrapper}>
         <Checkbox
           title={`100 ${props.symbol}`}
@@ -155,13 +170,13 @@ const FormPledge: FunctionComponent<IFormPledgeProps> = props => {
         <h6>OR</h6>
       </div>
       <AmountInput
-        placeHolder="Custom amount"
+        placeHolder={t("home:customamt")}
         setAmount={setAmount}
         input={input}
         setInput={setInput}
       />
       <Button
-        title={'Back this project'}
+        title={t("home:backproject")}
         onClick={handleSubmit}
         disabled={!amount || isSubmitting}
         isLoading={isSubmitting}
@@ -178,7 +193,7 @@ const FormPledge: FunctionComponent<IFormPledgeProps> = props => {
           <div className={styles.wrapper}>
             <div>
               <h6>
-                Your balance: {Utils.formatAmount(balance, decimals)} {symbol}
+                {t("home:balance")} {Utils.formatAmount(balance, decimals)} {symbol}
               </h6>
             </div>
           </div>
